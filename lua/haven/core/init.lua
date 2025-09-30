@@ -41,7 +41,6 @@ vim.opt.runtimepath:prepend(dev_pack_path)
 
 require("haven.core.string")
 require("haven.core.clipboard")
--- require("haven.core.filetype")
 require("haven.core.autocmds")
 require("haven.core.options")
 require("haven.core.keymaps")

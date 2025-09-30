@@ -55,6 +55,7 @@
                 ../../compiler
                 ../../lua
                 ../../init.lua
+                ../../filetype.lua
               ];
             };
 
