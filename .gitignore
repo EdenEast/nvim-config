@@ -1,0 +1,8 @@
+.DS_Store
+.jj
+.direnv
+.luarc.json
+.pre-commit-config.yaml
+result
+tags
+profile.json
