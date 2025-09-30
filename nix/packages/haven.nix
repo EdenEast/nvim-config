@@ -35,7 +35,7 @@
           pluginDependencies.snacks = with pkgs; [
             fd
             ripgrep
-            # git-graph
+            git-graph
           ];
         in
           formatters
@@ -76,7 +76,9 @@
           };
 
           start = [pkgs.vimPlugins.nvim-treesitter.withAllGrammars] ++ inputs.mnw.lib.npinsToPlugins pkgs ../../start.json;
-          opt = inputs.mnw.lib.npinsToPlugins pkgs ../../opt.json;
+          opt =
+            [self'.packages.blink-cmp self'.packages.blink-pairs]
+            ++ builtins.filter (x: !lib.hasPrefix "blink" x.pname) (inputs.mnw.lib.npinsToPlugins pkgs ../../opt.json);
         };
 
         providers = {

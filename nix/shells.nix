@@ -40,7 +40,26 @@
       start = mkNpinsWrapper "start" "start.json";
       opt = mkNpinsWrapper "opt" "opt.json";
 
-      packages = with pkgs; [npins just start opt watchexec];
+      update = let
+        color = "\\033[0;33m";
+        reset = "\\033[0m";
+      in
+        pkgs.writeShellScriptBin "update" ''
+          echo -e "${color}Updating start plugins${reset}"
+          ${pkgs.npins}/bin/npins --lock-file ./start.json update -f 2>&1 | { grep '.*Changes:$\|.*url:.*' || true; }
+          echo -e "${color}Updating opt plugins${reset}"
+          ${pkgs.npins}/bin/npins --lock-file ./opt.json update -f 2>&1 | { grep '.*Changes:$\|.*url:.*' || true; }
+
+          echo -e "${color}Updating blink-cmp${reset}"
+          ${pkgs.nix-update}/bin/nix-update -F blink-cmp --version=branch --option extra-experimental-features pipe-operators
+          echo -e "${color}Updating blink-pairs${reset}"
+          ${pkgs.nix-update}/bin/nix-update -F blink-pairs --version=branch --option extra-experimental-features pipe-operators
+        '';
+
+      profile = pkgs.writeShellScriptBin "profile" ''NVIM_PROFILE="snacks" nvim'';
+      trace = pkgs.writeShellScriptBin "trace" ''NVIM_PROFILE="trace" nvim'';
+
+      packages = with pkgs; [npins just start opt update watchexec profile trace];
       plugins = self'.packages.default.passthru.config.plugins.start ++ self'.packages.default.passthru.config.plugins.opt;
     in {
       default = self'.devShells.nightly;
