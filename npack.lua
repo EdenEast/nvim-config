@@ -181,7 +181,7 @@ if not vim.iter(vim.opt.runtimepath:get()):any(function(path) return path == con
 end
 
 local plugins = vim
-  .iter(list_lua_submodules("haven.plugins"))
+  .iter(list_lua_submodules("haven.pack"))
   :fold({}, function(acc, mod) return normalize(require(mod), acc) end)
 
 local opt_pins = vim.json.decode(table.concat(vim.fn.readfile("./opt.json"), "\n")).pins
