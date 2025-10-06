@@ -33,13 +33,13 @@
       "type": "Git",
       "repository": {
         "type": "GitHub",
-        "owner": "echasnovski",
+        "owner": "nvim-mini",
         "repo": "mini.nvim"
       },
       "branch": "main",
       "submodules": false,
       "revision": "d12b7c1b4dccc5245a3d2b7bc73da6dd910af2c0",
-      "url": "https://github.com/echasnovski/mini.nvim/archive/d12b7c1b4dccc5245a3d2b7bc73da6dd910af2c0.tar.gz",
+      "url": "https://github.com/nvim-mini/mini.nvim/archive/d12b7c1b4dccc5245a3d2b7bc73da6dd910af2c0.tar.gz",
       "hash": "0lxsqd9y27h50i8gpsmx7hbn3fk3kgz4miy3gpsvjc8zwf75m3px"
     },
     "nvim-surround": {
