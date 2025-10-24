@@ -1,15 +1,20 @@
 ---@type lz.n.Spec
 return {
-  "nvim-tmux-navigation",
+  "vim-tmux-navigator",
+  before = function() vim.g.tmux_navigator_disable_when_zoomed = 1 end,
   after = function()
-    local ntn = require("nvim-tmux-navigation")
-    ntn.setup({
-      disable_when_zoomed = true, -- defaults to false
-    })
-    local k = vim.keymap.set
-    k("n", "<C-h>", ntn.NvimTmuxNavigateLeft)
-    k("n", "<C-j>", ntn.NvimTmuxNavigateDown)
-    k("n", "<C-k>", ntn.NvimTmuxNavigateUp)
-    k("n", "<C-l>", ntn.NvimTmuxNavigateRight)
+    local t = function(key, direction)
+      vim.keymap.set(
+        "t",
+        string.format("<c-%s>", key),
+        function() vim.cmd("TmuxNavigate" .. direction) end,
+        { desc = "Move focus " .. direction }
+      )
+    end
+
+    t("h", "Left")
+    t("j", "Down")
+    t("k", "Up")
+    t("l", "Right")
   end,
 }

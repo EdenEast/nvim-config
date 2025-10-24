@@ -1,5 +1,4 @@
 local map = vim.keymap.set
-local fmt = string.format
 
 vim.g.mapleader = vim.g.mapleader or " "
 vim.g.maplocalleader = vim.g.maplocalleader or ","

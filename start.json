@@ -55,19 +55,6 @@
       "url": "https://github.com/kylechui/nvim-surround/archive/a868c256c861044beb9794b4dd126480dcdfbdad.tar.gz",
       "hash": "01cw6paim1jv2wvjdb3r7qawfnbsnkiibpp9hc1zz53pbi3wzcmi"
     },
-    "nvim-tmux-navigation": {
-      "type": "Git",
-      "repository": {
-        "type": "GitHub",
-        "owner": "alexghergh",
-        "repo": "nvim-tmux-navigation"
-      },
-      "branch": "main",
-      "submodules": false,
-      "revision": "4898c98702954439233fdaf764c39636681e2861",
-      "url": "https://github.com/alexghergh/nvim-tmux-navigation/archive/4898c98702954439233fdaf764c39636681e2861.tar.gz",
-      "hash": "06gk27d0x1cfz674bdkvh1f9kk7imw0agvh5n790zbnf4r0j040b"
-    },
     "nvim-treesitter": {
       "type": "Git",
       "repository": {
@@ -161,6 +148,19 @@
       "revision": "41a675ddbeefd6a93664a4dc52f302fe3086a933",
       "url": "https://github.com/kana/vim-textobj-user/archive/41a675ddbeefd6a93664a4dc52f302fe3086a933.tar.gz",
       "hash": "1y1g3vcm97fqjyigiajbvbck4nlc04vxl3535x4sl40s5jbm5vz3"
+    },
+    "vim-tmux-navigator": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "christoomey",
+        "repo": "vim-tmux-navigator"
+      },
+      "branch": "master",
+      "submodules": false,
+      "revision": "c45243dc1f32ac6bcf6068e5300f3b2b237e576a",
+      "url": "https://github.com/christoomey/vim-tmux-navigator/archive/c45243dc1f32ac6bcf6068e5300f3b2b237e576a.tar.gz",
+      "hash": "0gxf841d030hf3w9rz5pp4saik5qq9sidqylrp3hkc4xy6pyfhr0"
     }
   },
   "version": 5
