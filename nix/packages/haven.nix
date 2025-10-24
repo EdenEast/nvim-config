@@ -13,7 +13,7 @@
   }: {
     packages = let
       commonArgs = {
-        appName = "nvim-hav";
+        appName = "nvim-haven";
 
         extraBinPath = let
           formatters = with pkgs; [

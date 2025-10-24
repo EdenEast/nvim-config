@@ -56,7 +56,6 @@
         treefmt-nix.follows = "treefmt-nix";
       };
     };
-    # mnw.url = ./mnw;
     mnw = {
       type = "github";
       owner = "EdenEast";
