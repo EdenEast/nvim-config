@@ -71,11 +71,11 @@
         debug = true;
       });
 
-  nixConfig = {
-    experimental-features = [
-      "flakes"
-      "nix-command"
-      "pipe-operators"
-    ];
-  };
+  # nixConfig = {
+  #   experimental-features = [
+  #     "flakes"
+  #     "nix-command"
+  #     "pipe-operators"
+  #   ];
+  # };
 }

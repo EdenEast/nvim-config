@@ -38,11 +38,19 @@
             git-graph
           ];
         in
-          formatters
-          ++ languageServers
-          ++ neovimDependencies
-          ++ (pluginDependencies |> builtins.attrValues |> lib.flatten)
-          |> lib.unique;
+          lib.pipe
+          (formatters ++ languageServers ++ neovimDependencies ++ builtins.attrValues pluginDependencies)
+          [
+            lib.flatten
+            lib.unique
+          ];
+
+        ## experimental-features 'pipe-operators'
+        # formatters
+        # ++ languageServers
+        # ++ neovimDependencies
+        # ++ (pluginDependencies |> builtins.attrValues |> lib.flatten)
+        # |> lib.unique;
 
         initLua = builtins.readFile ../../init.lua;
 
