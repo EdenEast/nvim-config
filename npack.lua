@@ -1,4 +1,3 @@
-local async = require("vim._async")
 local fs, uv, joinpath = vim.fs, vim.uv, vim.fs.joinpath
 local fmt = string.format
 local copcall = package.loaded.jit and pcall or require("coxpcall").pcall
@@ -6,6 +5,11 @@ local n_threads = 2 * #(uv.cpu_info() or { {} })
 vim.g.is_npack_load = true
 
 local is_headless = #vim.api.nvim_list_uis() == 0
+
+local is_ok, async = pcall(require, "vim._async")
+if not is_ok then
+  async = loadfile(fs.joinpath(uv.cwd(), "async.lua"))()
+end
 
 local Terminal = {}
 
