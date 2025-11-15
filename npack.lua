@@ -126,6 +126,14 @@ local function normalize(spec, result)
   return result
 end
 
+local function exec_build_string(command, name, path)
+  write(Terminal.prefix(name, fmt("Execute build command: %s", Terminal.yellow(command))))
+  local out = vim.system(vim.split(command, " "), { cwd = path, text = true }):wait()
+  if out.code ~= 0 then
+    write(Terminal.prefix(name, fmt("Failed to build: '%s'", Terminal.red(out.stderr))))
+  end
+end
+
 -- Git ------------------------------------------------------------------------
 
 --- @async
@@ -194,6 +202,23 @@ local start_pins = vim.json.decode(table.concat(vim.fn.readfile("./start.json"),
 local function install(args)
   args = args or {}
 
+  local function build_handle(name, path)
+    if plugins[name] then
+      local plug = plugins[name]
+      if plug.build then
+        local build = plug.build
+        local ty = type(build)
+        if ty == "function" then
+          build()
+        elseif ty == "table" then
+          vim.iter(build):each(function(x) exec_build_string(x, name, path) end)
+        else
+          exec_build_string(build, name, path)
+        end
+      end
+    end
+  end
+
   local function inner(name, pin, is_opt)
     local path_comp = is_opt and "opt" or "start"
     local path = vim.fs.joinpath(root_pack_path, path_comp, name)
@@ -206,7 +231,6 @@ local function install(args)
       -- check if the current rev is the one we want
       local current_rev = git_cmd({ "rev-list", "-1", "HEAD" }, path)
       if current_rev == pin.revision then
-        -- write(Terminal.yellow("[" ..name .."] "..))
         write(Terminal.prefix(name, Terminal.green("up to date")))
         return
       end
@@ -214,6 +238,7 @@ local function install(args)
       git_cmd({ "fetch", "--quiet", "--tags", "--force", "--recurse-submodules=yes", "origin" }, path)
       git_checkout(pin.revision, path)
       write(Terminal.prefix(name, fmt("%s -> %s", Terminal.red(current_rev), Terminal.magenta(pin.revision))))
+      build_handle(name, path)
       return
     end
 
@@ -221,6 +246,7 @@ local function install(args)
     git_clone(url, path)
     git_checkout(pin.revision, path)
     write(Terminal.prefix(name, fmt("Installed at rev %s", Terminal.magenta(pin.revision))))
+    build_handle(name, path)
   end
 
   local funs = {}
