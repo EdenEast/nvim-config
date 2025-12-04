@@ -4,14 +4,14 @@
       "type": "Git",
       "repository": {
         "type": "GitHub",
-        "owner": "nvim-neorocks",
+        "owner": "lumen-oss",
         "repo": "lz.n"
       },
       "branch": "master",
       "submodules": false,
-      "revision": "130177cdd81e05d046a5f7a00f336351c3ec486b",
-      "url": "https://github.com/nvim-neorocks/lz.n/archive/130177cdd81e05d046a5f7a00f336351c3ec486b.tar.gz",
-      "hash": "0qgam55k24l0n8y5xfw2lqy4j1gnw7vb7mk3m7ksf0dnf5xmx7w3"
+      "revision": "b36c73e1a9d1cb2c05b354b390da0d141c9fa09d",
+      "url": "https://github.com/lumen-oss/lz.n/archive/b36c73e1a9d1cb2c05b354b390da0d141c9fa09d.tar.gz",
+      "hash": "1kbkmpf7h3y6cw63sa9g2wyvp4gysacvqhp1hgy3v7lpx5yg9jk7"
     },
     "markview.nvim": {
       "type": "GitRelease",
