@@ -46,4 +46,18 @@ function M.enable_lsp(server)
   vim.schedule(function() vim.cmd.doautocmd("FileType") end)
 end
 
+local loaded_list = {}
+---Trigger load if plugin has not been loaded by lz.n
+---@generic T
+---@param module string lua module to be required
+---@param plugin_name string plugin to be loaded by lz.n
+---@return T
+function M.require_or_trigger_load(module, plugin_name)
+  if not loaded_list[plugin_name] then
+    require("lz.n").trigger_load(plugin_name)
+    loaded_list[plugin_name] = true
+  end
+  return require(module)
+end
+
 return M

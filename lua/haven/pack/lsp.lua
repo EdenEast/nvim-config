@@ -1,10 +1,8 @@
+local require_or_trigger_load = require("haven.util").require_or_trigger_load
 local diagnostic_icons = require("haven.icons").diagnostics
 local methods = vim.lsp.protocol.Methods
 
-local function fzf()
-  if not vim.g.fzf_lua_loaded then require("lz.n").trigger_load("fzf-lua") end
-  return require("fzf-lua")
-end
+local function fzf() return require_or_trigger_load("fzf-lua", "fzf-lua") end
 
 -- Disable inlay hints initially (and enable if needed with my ToggleInlayHints command).
 vim.g.inlay_hints = false
@@ -37,7 +35,12 @@ local function on_attach(client, bufnr)
     )
   end
 
-  keymap("gra", function() require("tiny-code-action").code_action() end, "Code Actions", { "n", "x" })
+  keymap(
+    "gra",
+    function() require_or_trigger_load("tiny-code-action", "tiny-code-action.nvim").code_action() end,
+    "Code Actions",
+    { "n", "x" }
+  )
 
   keymap("grr", "<cmd>FzfLua lsp_references<cr>", "Lsp References")
 
@@ -235,13 +238,14 @@ return {
   {
     "fidget.nvim",
     src = "j-hui/fidget.nvim",
-    event = { "BufReadPre", "BufNewFile" },
+    event = "LspAttach",
     after = function() require("fidget").setup({}) end,
   },
 
   {
     "tiny-inline-diagnostic.nvim",
     src = "rachartier/tiny-inline-diagnostic.nvim",
+    event = "LspAttach",
     after = function()
       require("tiny-inline-diagnostic").setup({
         options = {
@@ -250,5 +254,10 @@ return {
       })
       vim.diagnostic.config({ virtual_text = false })
     end,
+  },
+
+  {
+    "tiny-code-action.nvim",
+    src = "rachartier/tiny-code-action.nvim",
   },
 }
