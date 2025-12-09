@@ -26,6 +26,10 @@
             nixd
           ];
 
+          languageDebuggers = with pkgs; [
+            lldb
+          ];
+
           neovimDependencies = with pkgs;
             [
               ripgrep
@@ -39,7 +43,7 @@
           ];
         in
           lib.pipe
-          (formatters ++ languageServers ++ neovimDependencies ++ builtins.attrValues pluginDependencies)
+          (formatters ++ languageServers ++ languageDebuggers ++ neovimDependencies ++ builtins.attrValues pluginDependencies)
           [
             lib.flatten
             lib.unique

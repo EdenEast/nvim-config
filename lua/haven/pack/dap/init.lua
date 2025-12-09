@@ -12,8 +12,8 @@ local icons = {
 for name, sign in pairs(icons) do
   sign = type(sign) == "table" and sign or { sign }
   vim.fn.sign_define("Dap" .. name, {
-        -- stylua: ignore
-        text = sign[1] --[[@as string]] .. ' ',
+    -- stylua: ignore
+    text = sign[1] --[[@as string]] .. ' ',
     texthl = sign[2] or "DiagnosticInfo",
     linehl = sign[3],
     numhl = sign[3],
@@ -65,11 +65,11 @@ return {
 
       -- Load language / adaptor configurations
       for _, mod in ipairs({
-        "c",
-        "lua",
+        -- "c",
+        -- "lua",
         "rust",
       }) do
-        require("haven.mod.dap." .. mod)
+        require("haven.pack.dap.adaptor." .. mod)
       end
     end,
   },
