@@ -30,7 +30,7 @@ return {
         jsonc = { "prettier", name = "dprint", timeout_ms = 500, lsp_format = "fallback" },
         less = { "prettier" },
         lua = { "stylua", lsp_format = "fallback" },
-        markdown = { "prettier" },
+        -- markdown = { "prettier" },
         nix = { "alejandra", "nixfmt", stop_after_first = true },
         rust = { name = "rust_analyzer", timeout_ms = 500, lsp_format = "prefer" },
         scss = { "prettier" },
