@@ -24,7 +24,7 @@ return {
     { "<leader>fh", f("help_tags"), desc = "Help Pages" },
     { "<leader>fs", f("lsp_document_symbols"), desc = "Goto Symbol" },
     { "<leader>fS", f("lsp_live_workspace_symbols"), desc = "Goto Symbol (workspace)" },
-    { "<leader>fR", f("resume"), desc = "Resume" },
+    { "<leader>fr", f("resume"), desc = "Resume" },
     { "<leader>fw", f("grep_cword"), desc = "cword" },
     { "<leader>fW", f("grep_cWORD"), desc = "cWORD" },
     { "<leader>fw", f("grep_visual"), mode = "v", desc = "Word" },
