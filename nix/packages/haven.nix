@@ -4,11 +4,9 @@
   ...
 }: {
   perSystem = {
-    config,
     self',
     inputs',
     pkgs,
-    system,
     ...
   }: {
     packages = let
@@ -17,13 +15,14 @@
 
         extraBinPath = let
           formatters = with pkgs; [
+            alejandra
             nixfmt
             stylua
           ];
 
           languageServers = with pkgs; [
             lua-language-server
-            nixd
+            nil
           ];
 
           languageDebuggers = with pkgs; [
@@ -34,7 +33,9 @@
             [
               ripgrep
             ]
-            ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [pkgs.wl-clipboard];
+            ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
+              pkgs.wl-clipboard
+            ];
 
           pluginDependencies.snacks = with pkgs; [
             fd
@@ -42,12 +43,11 @@
             git-graph
           ];
         in
-          lib.pipe
-          (formatters ++ languageServers ++ languageDebuggers ++ neovimDependencies ++ builtins.attrValues pluginDependencies)
-          [
-            lib.flatten
-            lib.unique
-          ];
+          lib.pipe (formatters
+            ++ languageServers
+            ++ languageDebuggers
+            ++ neovimDependencies
+            ++ builtins.attrValues pluginDependencies) [lib.flatten lib.unique];
 
         ## experimental-features 'pipe-operators'
         # formatters
@@ -88,10 +88,13 @@
               '';
           };
 
-          start = [pkgs.vimPlugins.nvim-treesitter.withAllGrammars] ++ inputs.mnw.lib.npinsToPlugins pkgs ../../start.json;
+          start =
+            [pkgs.vimPlugins.nvim-treesitter.withAllGrammars]
+            ++ inputs.mnw.lib.npinsToPlugins pkgs ../../start.json;
           opt =
             [self'.packages.blink-cmp self'.packages.blink-pairs]
-            ++ builtins.filter (x: !lib.hasPrefix "blink" x.pname) (inputs.mnw.lib.npinsToPlugins pkgs ../../opt.json);
+            ++ builtins.filter (x: !lib.hasPrefix "blink" x.pname)
+            (inputs.mnw.lib.npinsToPlugins pkgs ../../opt.json);
         };
 
         providers = {
@@ -104,9 +107,10 @@
     in {
       default = self'.packages.nightly;
 
-      nightly = inputs.mnw.lib.wrap {inherit pkgs;} (
-        commonArgs // {inherit (inputs'.neovim-nightly-overlay.packages) neovim;}
-      );
+      nightly = inputs.mnw.lib.wrap {inherit pkgs;} (commonArgs
+        // {
+          inherit (inputs'.neovim-nightly-overlay.packages) neovim;
+        });
       stable = inputs.mnw.lib.wrap {inherit pkgs;} commonArgs;
     };
   };
