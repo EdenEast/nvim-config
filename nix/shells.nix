@@ -7,7 +7,6 @@
     lib,
     pkgs,
     self',
-    system,
     ...
   }: {
     devShells = let

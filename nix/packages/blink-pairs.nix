@@ -1,9 +1,5 @@
-{...}: {
-  perSystem = {
-    pkgs,
-    lib,
-    ...
-  }: {
+_: {
+  perSystem = {pkgs, ...}: {
     packages = {
       blink-pairs = pkgs.rustPlatform.buildRustPackage rec {
         pname = "blink.pairs";

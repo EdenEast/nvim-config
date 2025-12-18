@@ -2,7 +2,7 @@
 local M = {}
 
 local max_timeout = 30000
-local copcall = package.loaded.jit and pcall or require('coxpcall').pcall
+local copcall = package.loaded.jit and pcall or require("coxpcall").pcall
 
 --- @param thread thread
 --- @param on_finish fun(err: string?, ...:any)
@@ -15,7 +15,7 @@ local function resume(thread, on_finish, ...)
   if not stat then
     -- Coroutine had error
     on_finish(ret[2] --[[@as string]])
-  elseif coroutine.status(thread) == 'dead' then
+  elseif coroutine.status(thread) == "dead" then
     -- Coroutine finished
     on_finish(nil, unpack(ret, 2, ret.n))
   else
@@ -23,13 +23,9 @@ local function resume(thread, on_finish, ...)
     --- @cast fn -string
 
     --- @type boolean, string?
-    local ok, err = copcall(fn, function(...)
-      resume(thread, on_finish, ...)
-    end)
+    local ok, err = copcall(fn, function(...) resume(thread, on_finish, ...) end)
 
-    if not ok then
-      on_finish(err)
-    end
+    if not ok then on_finish(err) end
   end
 end
 
@@ -39,22 +35,16 @@ function M.run(func, on_finish)
   local res --- @type {n:integer, [integer]:any}?
   resume(coroutine.create(func), function(err, ...)
     res = vim.F.pack_len(err, ...)
-    if on_finish then
-      on_finish(err, ...)
-    end
+    if on_finish then on_finish(err, ...) end
   end)
 
   return {
     --- @param timeout? integer
     --- @return any ... return values of `func`
     wait = function(_self, timeout)
-      vim.wait(timeout or max_timeout, function()
-        return res ~= nil
-      end)
-      assert(res, 'timeout')
-      if res[1] then
-        error(res[1])
-      end
+      vim.wait(timeout or max_timeout, function() return res ~= nil end)
+      assert(res, "timeout")
+      if res[1] then error(res[1]) end
       return unpack(res, 2, res.n)
     end,
   }
@@ -67,7 +57,7 @@ end
 --- @param ... any func arguments
 --- @return any ...
 function M.await(argc, fun, ...)
-  assert(coroutine.running(), 'Async.await() must be called from an async function')
+  assert(coroutine.running(), "Async.await() must be called from an async function")
   local args = vim.F.pack_len(...) --- @type {n:integer, [integer]:any}
 
   --- @param callback fun(...:any)
@@ -81,9 +71,7 @@ end
 --- @param max_jobs integer
 --- @param funs (async fun())[]
 function M.join(max_jobs, funs)
-  if #funs == 0 then
-    return
-  end
+  if #funs == 0 then return end
 
   max_jobs = math.min(max_jobs, #funs)
 

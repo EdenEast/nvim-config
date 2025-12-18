@@ -1,9 +1,5 @@
-{...}: {
-  perSystem = {
-    pkgs,
-    lib,
-    ...
-  }: {
+_: {
+  perSystem = {pkgs, ...}: {
     packages = {
       blink-cmp = pkgs.rustPlatform.buildRustPackage rec {
         pname = "blink.cmp";

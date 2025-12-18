@@ -7,9 +7,7 @@ vim.g.is_npack_load = true
 local is_headless = #vim.api.nvim_list_uis() == 0
 
 local is_ok, async = pcall(require, "vim._async")
-if not is_ok then
-  async = loadfile(fs.joinpath(uv.cwd(), "async.lua"))()
-end
+if not is_ok then async = loadfile(fs.joinpath(uv.cwd(), "async.lua"))() end
 
 local Terminal = {}
 
@@ -129,9 +127,7 @@ end
 local function exec_build_string(command, name, path)
   write(Terminal.prefix(name, fmt("Execute build command: %s", Terminal.yellow(command))))
   local out = vim.system(vim.split(command, " "), { cwd = path, text = true }):wait()
-  if out.code ~= 0 then
-    write(Terminal.prefix(name, fmt("Failed to build: '%s'", Terminal.red(out.stderr))))
-  end
+  if out.code ~= 0 then write(Terminal.prefix(name, fmt("Failed to build: '%s'", Terminal.red(out.stderr)))) end
 end
 
 -- Git ------------------------------------------------------------------------
