@@ -40,7 +40,10 @@ local dev_pack_path = vim.fn.stdpath("data") .. "/site"
 vim.opt.runtimepath:prepend(dev_pack_path)
 
 require("haven.core.string")
-require("haven.core.clipboard")
+
+-- require("haven.core.clipboard")
+vim.opt.clipboard = { "unnamed", "unnamedplus" }
+
 require("haven.core.autocmds")
 require("haven.core.options")
 require("haven.core.keymaps")

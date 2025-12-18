@@ -1,3 +1,5 @@
+-- TODO: wl-copy on wayland and xclip on x11
+
 local platform = require("haven.core.platform")
 
 local name
