@@ -31,8 +31,10 @@
 
           neovimDependencies = with pkgs;
             [
-              ripgrep
+              fzf
+              sd
               nodejs-slim
+              ripgrep
             ]
             ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [
               pkgs.wl-clipboard
