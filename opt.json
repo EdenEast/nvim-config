@@ -182,6 +182,19 @@
       "url": "https://github.com/MagicDuck/grug-far.nvim/archive/50d9ee2b5a19634670441948e7e4afaa042f1059.tar.gz",
       "hash": "0pbwlp5i4aq1ffqbcnjf62ygb73b1svyh5ly4vyq6x7jnc0g416g"
     },
+    "live-preview.nvim": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "brianhuster",
+        "repo": "live-preview.nvim"
+      },
+      "branch": "main",
+      "submodules": false,
+      "revision": "04c2cc92476d7b3882a0c7155bb13c4d7ee4bfbf",
+      "url": "https://github.com/brianhuster/live-preview.nvim/archive/04c2cc92476d7b3882a0c7155bb13c4d7ee4bfbf.tar.gz",
+      "hash": "0i3ajfiqgrrg4r2ayh236z93354x9d3z63myqkwzx01vwiz3i6vw"
+    },
     "neogit": {
       "type": "Git",
       "repository": {
