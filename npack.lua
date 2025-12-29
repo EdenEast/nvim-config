@@ -70,6 +70,14 @@ end
 ---@return boolean
 local function path_exists(path) return uv.fs_stat(path) ~= nil end
 
+local function path_is_empty(path)
+  local dir = uv.fs_scandir(path)
+  if not dir then
+    return false -- Directory does not exist or can't be opened
+  end
+  return uv.fs_scandir_next(dir) == nil
+end
+
 ---Convert module format to path format
 ---@param modname string module name in the format `foo.bar`
 ---@return string modpath module path in the format `foo/bar`
@@ -323,6 +331,29 @@ local function clean(args)
   end
 end
 
+local function uninstall()
+  write(fmt("NVIM_APPNAME:   %s", Terminal.yellow(vim.env.NVIM_APPNAME)))
+  write(fmt("Root Pack Path: %s", Terminal.yellow(root_pack_path)))
+
+  if path_is_empty(root_pack_path) then
+    write("Pack path already uninstalled")
+    return
+  end
+
+  if not is_headless then
+    local confirm = vim.fn.confirm(fmt("Remove %s? ", root_pack_path), "&Yes\n&No", 2)
+    if confirm == 1 then vim.fs.rm(root_pack_path, {
+      recursive = true,
+      force = true,
+    }) end
+  else
+    vim.fs.rm(root_pack_path, {
+      recursive = true,
+      force = true,
+    })
+  end
+end
+
 vim.api.nvim_create_user_command("PackInstall", function(opts)
   install(opts.fargs)
   if is_headless then vim.cmd("qa") end
@@ -332,6 +363,13 @@ end, {
 
 vim.api.nvim_create_user_command("PackClean", function(opts)
   clean(opts.fargs)
+  if is_headless then vim.cmd("qa") end
+end, {
+  nargs = "*",
+})
+
+vim.api.nvim_create_user_command("PackUninstall", function(opts)
+  uninstall()
   if is_headless then vim.cmd("qa") end
 end, {
   nargs = "*",

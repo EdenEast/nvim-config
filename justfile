@@ -9,6 +9,9 @@ install appname="nvim-haven":
 clean appname="nvim-haven":
   @NVIM_APPNAME="{{appname}}" nvim --clean --headless -u ./npack.lua +PackClean +qa
 
+uninstall appname="nvim-haven":
+  @NVIM_APPNAME="{{appname}}" nvim --clean --headless -u ./npack.lua +PackUninstall +qa
+
 link name="nvim":
   @ln -s $(pwd) $HOME/.config/{{name}}
 
