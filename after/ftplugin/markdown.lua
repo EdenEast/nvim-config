@@ -5,8 +5,6 @@ vim.opt_local.formatexpr = ""
 vim.opt_local.conceallevel = 2
 vim.opt_local.concealcursor = "nc"
 
-vim.keymap.set("n", "<localleader>p", "<cmd>LivePreview start<cr>", { desc = "Open Live Preview" })
-
 require("markview").setup({
   experimental = { check_rtp = false },
   preview = {
@@ -15,3 +13,6 @@ require("markview").setup({
     linewise_hybrid_mode = true,
   },
 })
+
+vim.keymap.set("n", "<localleader>p", "<cmd>LivePreview start<cr>", { desc = "Open Live Preview" })
+vim.keymap.set("n", "<localleader>m", "<cmd>Markview toggle<cr>", { desc = "Toggle Markview" })
