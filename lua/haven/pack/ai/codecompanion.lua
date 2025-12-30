@@ -6,11 +6,6 @@ return {
     { "<leader>aa", "<cmd>CodeCompanionChat Add<cr>", desc = "Add to CodeCompanion chat", mode = "x" },
   },
   after = function()
-    local config = require("codecompanion.config").config
-
-    local diff_opts = config.display.diff.opts
-    table.insert(diff_opts, "context:99") -- Setting the context to a very large number disables folding.
-
     require("codecompanion").setup({
       strategies = {
         inline = {
@@ -19,15 +14,24 @@ return {
               modes = { n = "<leader>ay" },
               description = "Accept the suggested change",
             },
+            always_accept = {
+              modes = { n = "<leader>aY" },
+              description = "Accept and enable auto mode",
+            },
             reject_change = {
               modes = { n = "<leader>an" },
               description = "Reject the suggested change",
             },
           },
         },
-      },
-      display = {
-        diff = { opts = diff_opts },
+        chat = {
+          keymaps = {
+            clear = {
+              modes = { n = "gX" },
+              description = "Clear chat",
+            },
+          },
+        },
       },
     })
   end,
