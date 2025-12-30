@@ -13,22 +13,6 @@
       "url": "https://github.com/lumen-oss/lz.n/archive/b36c73e1a9d1cb2c05b354b390da0d141c9fa09d.tar.gz",
       "hash": "1kbkmpf7h3y6cw63sa9g2wyvp4gysacvqhp1hgy3v7lpx5yg9jk7"
     },
-    "markview.nvim": {
-      "type": "GitRelease",
-      "repository": {
-        "type": "GitHub",
-        "owner": "OXY2DEV",
-        "repo": "markview.nvim"
-      },
-      "pre_releases": false,
-      "version_upper_bound": null,
-      "release_prefix": null,
-      "submodules": false,
-      "version": "v25.10.0",
-      "revision": "2d68c060ad4387d9895577af43c3ace41a80de5d",
-      "url": "https://api.github.com/repos/OXY2DEV/markview.nvim/tarball/v25.10.0",
-      "hash": "183vrv5izmliyzp3zr5slrkx5mk0alqcc5qcijprinl5g5kqgb1c"
-    },
     "mini.nvim": {
       "type": "Git",
       "repository": {
