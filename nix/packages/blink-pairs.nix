@@ -3,13 +3,13 @@ _: {
     packages = {
       blink-pairs = pkgs.rustPlatform.buildRustPackage rec {
         pname = "blink.pairs";
-        version = "0.3.0-unstable-2025-09-05";
+        version = "0.4.1-unstable-2025-12-08";
 
         src = pkgs.fetchFromGitHub {
           owner = "Saghen";
           repo = "blink.pairs";
-          rev = "c2d4030c10e6628de159cbac79a32a70ad746290";
-          hash = "sha256-0S8/MQLpnYmwEIqWCU6TBr/NibagfaWkqMOTv7He2Zg=";
+          rev = "65978aadaf9b7d6cae59c1c51cf2b366b370546e";
+          hash = "sha256-CwaO17nCTb2lvqY3dupi0RXKlpOFUwhqLwVW3djAQyU=";
         };
 
         cargoHash = "sha256-Cn9zRsQkBwaKbBD/JEpFMBOF6CBZTDx7fQa6Aoic4YU=";
