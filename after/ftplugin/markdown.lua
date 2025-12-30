@@ -6,3 +6,12 @@ vim.opt_local.conceallevel = 2
 vim.opt_local.concealcursor = "nc"
 
 vim.keymap.set("n", "<localleader>p", "<cmd>LivePreview start<cr>", { desc = "Open Live Preview" })
+
+require("markview").setup({
+  experimental = { check_rtp = false },
+  preview = {
+    enable_hybrid_mode = true,
+    hybrid_modes = { "n" },
+    linewise_hybrid_mode = true,
+  },
+})
