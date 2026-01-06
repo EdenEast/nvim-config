@@ -203,6 +203,15 @@ local plugins = vim
 local opt_pins = vim.json.decode(table.concat(vim.fn.readfile("./opt.json"), "\n")).pins
 local start_pins = vim.json.decode(table.concat(vim.fn.readfile("./start.json"), "\n")).pins
 
+local function status(args)
+  args = args or {}
+
+  write(Terminal.prefix("NVIM_APPNAME", vim.env.NVIM_APPNAME))
+  write(Terminal.prefix("Config", config_path))
+  write(Terminal.prefix("Data", vim.fn.stdpath("data")))
+  write(Terminal.prefix("Pack", root_pack_path))
+end
+
 local function install(args)
   args = args or {}
 
@@ -370,6 +379,13 @@ end, {
 
 vim.api.nvim_create_user_command("PackUninstall", function(opts)
   uninstall()
+  if is_headless then vim.cmd("qa") end
+end, {
+  nargs = "*",
+})
+
+vim.api.nvim_create_user_command("PackStatus", function(opts)
+  status(opts.fargs)
   if is_headless then vim.cmd("qa") end
 end, {
   nargs = "*",
