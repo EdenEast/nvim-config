@@ -50,10 +50,7 @@
       repo = "neovim-nightly-overlay";
       inputs = {
         flake-parts.follows = "flake-parts";
-        git-hooks.follows = "git-hooks";
-        hercules-ci-effects.follows = "";
         nixpkgs.follows = "nixpkgs";
-        treefmt-nix.follows = "treefmt-nix";
       };
     };
     mnw = {
