@@ -10,6 +10,8 @@
     ...
   }: {
     packages = let
+      npinsToPlugins = input: builtins.mapAttrs (_: v: v {inherit pkgs;}) (import ../_npins.nix {inherit input;});
+
       commonArgs = {
         appName = "nvim-haven";
 
@@ -91,13 +93,14 @@
               '';
           };
 
-          start =
-            [pkgs.vimPlugins.nvim-treesitter.withAllGrammars]
-            ++ inputs.mnw.lib.npinsToPlugins pkgs ../../start.json;
-          opt =
-            [self'.packages.blink-cmp self'.packages.blink-pairs]
-            ++ builtins.filter (x: !lib.hasPrefix "blink" x.pname)
-            (inputs.mnw.lib.npinsToPlugins pkgs ../../opt.json);
+          startAttrs = npinsToPlugins ../../start.json;
+          start = pkgs.vimPlugins.nvim-treesitter.withAllGrammars.dependencies;
+
+          optAttrs =
+            {
+              inherit (self'.packages) blink-cmp blink-pairs;
+            }
+            // lib.filterAttrs (name: _: !lib.hasPrefix "blink" name) (npinsToPlugins ../../opt.json);
         };
 
         providers = {
