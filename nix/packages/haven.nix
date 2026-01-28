@@ -98,7 +98,8 @@
 
           optAttrs =
             {
-              inherit (self'.packages) blink-cmp blink-pairs;
+              "blink.cmp" = self'.packages.blink-cmp;
+              "blink.pairs" = self'.packages.blink-pairs;
             }
             // lib.filterAttrs (name: _: !lib.hasPrefix "blink" name) (npinsToPlugins ../../opt.json);
         };
