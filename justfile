@@ -34,9 +34,9 @@ unlink name="nvim":
 
 # -------------------------------------------------------------------------------------
 
-[unix]
+[windows]
 profile op="snacks":
-  NVIM_PROFILE={{op}} nvim
+  @$env:NVIM_PROFILE = "{{op}}" ; nvim --clean --headless -u ./npack.lua +PackInstall
 
 [windows]
 install appname="nvim-haven":
