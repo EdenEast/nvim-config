@@ -94,7 +94,36 @@
           };
 
           startAttrs = npinsToPlugins ../../start.json;
-          start = pkgs.vimPlugins.nvim-treesitter.withAllGrammars.dependencies;
+          start =
+            (pkgs.vimPlugins.nvim-treesitter.withPlugins
+              (
+                parsers:
+                  builtins.attrValues {
+                    inherit
+                      (parsers)
+                      bash
+                      c
+                      c_sharp
+                      comment
+                      cpp
+                      fish
+                      html
+                      javascript
+                      json
+                      kdl
+                      lua
+                      markdown
+                      markdown_inline
+                      nix
+                      python
+                      rust
+                      toml
+                      typescript
+                      vim
+                      yaml
+                      ;
+                  }
+              )).dependencies;
 
           optAttrs =
             {
