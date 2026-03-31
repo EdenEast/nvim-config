@@ -61,7 +61,7 @@
       packages = with pkgs; [npins just start opt update watchexec profile trace];
       plugins = self'.packages.default.passthru.config.plugins.start ++ self'.packages.default.passthru.config.plugins.opt;
     in {
-      default = self'.devShells.stable;
+      default = self'.devShells.nightly;
 
       stable = pkgs.mkShell {
         name = "haven";

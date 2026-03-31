@@ -1,7 +1,5 @@
 vim.loader.enable()
 
-if vim.fn.has("nvim-0.12") == 1 then require("vim._extui").enable({ enable = true }) end
-
 -- I use the default neovim packpath as my development path for all my neovim plugins.
 -- If the NVIM_APPNAME is not `nvim` then we need to prepend the packpath directory to ensure that these are the first
 -- paths searched when looking for files
