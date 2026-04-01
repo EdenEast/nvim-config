@@ -3,16 +3,16 @@ _: {
     packages = {
       blink-cmp = pkgs.rustPlatform.buildRustPackage rec {
         pname = "blink.cmp";
-        version = "1.8.0-unstable-2025-12-26";
+        version = "1.10.1-unstable-2026-03-31";
 
         src = pkgs.fetchFromGitHub {
           owner = "Saghen";
           repo = "blink.cmp";
-          rev = "18712d9d292dd362067de74d3b54eb90ce860ba9";
-          hash = "sha256-BTI6TLv7gafyn/leGdfhgF9FW6ADOwheD+TNwUd22X4=";
+          rev = "5e088706d92da09949e081cc4d49e2c9ba8cfc8c";
+          hash = "sha256-eCMZzC8rGBRutnD84nxGcuDbUSxBXK0clcCept8gDA0=";
         };
 
-        cargoHash = "sha256-Qdt8O7IGj2HySb1jxsv3m33ZxJg96Ckw26oTEEyQjfs=";
+        cargoHash = "sha256-3o2n4xwNF9Fc3VlPKf3lnvmN7FVus5jQB8gcXXwz50c=";
 
         # Tries to call git
         preBuild = ''

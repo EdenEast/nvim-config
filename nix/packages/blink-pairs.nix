@@ -1,36 +1,42 @@
 _: {
   perSystem = {pkgs, ...}: {
     packages = {
-      blink-pairs = pkgs.rustPlatform.buildRustPackage rec {
-        pname = "blink.pairs";
-        version = "0.4.1-unstable-2025-12-08";
-
-        src = pkgs.fetchFromGitHub {
-          owner = "Saghen";
-          repo = "blink.pairs";
-          rev = "65978aadaf9b7d6cae59c1c51cf2b366b370546e";
-          hash = "sha256-CwaO17nCTb2lvqY3dupi0RXKlpOFUwhqLwVW3djAQyU=";
+      blink-pairs = let
+        rustNightly = pkgs.rust-bin.nightly.latest.default;
+        rustPlatform = pkgs.makeRustPlatform {
+          cargo = rustNightly;
+          rustc = rustNightly;
         };
+      in
+        rustPlatform.buildRustPackage {
+          pname = "blink.pairs";
+          version = "0.5.0-unstable-2026-03-27";
 
-        cargoHash = "sha256-Cn9zRsQkBwaKbBD/JEpFMBOF6CBZTDx7fQa6Aoic4YU=";
+          src = pkgs.fetchFromGitHub {
+            owner = "Saghen";
+            repo = "blink.pairs";
+            rev = "2da33da164fbbf5cf52214fb9e7db1096d55e0dc";
+            hash = "sha256-DIw9l9NXFi6S4j1dF3a7nMBEwKA5o65NySeaYPO4ZiY=";
+          };
 
-        # Tries to call git
-        preBuild = ''
-          rm build.rs
-        '';
+          cargoHash = "sha256-Cn9zRsQkBwaKbBD/JEpFMBOF6CBZTDx7fQa6Aoic4YU=";
 
-        doCheck = false;
-        postInstall = ''
-          cp -r lua "$out"
-          mkdir -p "$out/target"
-          mv "$out/lib" "$out/target/release"
-        '';
+          # Tries to call git
+          preBuild = ''
+            rm build.rs
+            rustc --version
+          '';
 
-        # Uses rust nightly
-        env.RUSTC_BOOTSTRAP = true;
-        # Don't move /doc to $out/share
-        forceShare = [];
-      };
+          doCheck = false;
+          postInstall = ''
+            cp -r lua "$out"
+            mkdir -p "$out/target"
+            mv "$out/lib" "$out/target/release"
+          '';
+
+          # Don't move /doc to $out/share
+          forceShare = [];
+        };
     };
   };
 }

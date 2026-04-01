@@ -59,20 +59,25 @@
       repo = "mnw";
       ref = "dev";
     };
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs:
-    inputs.flake-parts.lib.mkFlake {inherit inputs;} (inputs.import-tree ./nix
+    inputs.flake-parts.lib.mkFlake {inherit inputs;} (
+      inputs.import-tree ./nix
       // {
         systems = import inputs.systems;
         debug = true;
-      });
+      }
+    );
 
-  # nixConfig = {
-  #   experimental-features = [
-  #     "flakes"
-  #     "nix-command"
-  #     "pipe-operators"
-  #   ];
-  # };
+  nixConfig = {
+    accept-flake-config = true;
+    experimental-features = ["flakes" "nix-command" "pipe-operators"];
+    extra-substituters = ["https://edeneast.cachix.org"];
+    extra-trusted-public-keys = ["edeneast.cachix.org-1:a4tKrKZgZXXXYhDytg/Z3YcjJ04oz5ormt0Ow6OpExc="];
+  };
 }

@@ -22,10 +22,6 @@ local function on_attach(client, bufnr)
 
   require("haven.core.lightbulb").attach_lightbulb(bufnr, client.id)
 
-  -- Don't check for the capability here to allow dynamic registration of the request.
-  -- This is just checked for nvim version as this is 0.12 only
-  if vim.fn.has("nvim-0.12") == 1 then vim.lsp.document_color.enable(true, bufnr) end
-
   if client:supports_method(methods.textDocument_documentColor) then
     keymap(
       "grc",
