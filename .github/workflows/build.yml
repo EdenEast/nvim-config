@@ -1,0 +1,36 @@
+name: Build
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "**.nix"
+      - "flake.lock"
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+      with:
+        fetch-depth: 1
+
+    - uses: DeterminateSystems/nix-installer-action@main
+
+    - uses: cachix/cachix-action@master
+      with:
+        authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+        name: edeneast
+
+    - name: Build stable
+      run: nix build --accept-flake-config --print-out-paths --show-trace .#stable
+
+    - name: Build nightly
+      run: nix build --accept-flake-config --print-out-paths --show-trace .#nightly
+
+    - name: Build blink-cmp
+      run: nix build --accept-flake-config --print-out-paths --show-trace .#blink-cmp
+
+    - name: Build blink-pairs
+      run: nix build --accept-flake-config --print-out-paths --show-trace .#blink-pairs
