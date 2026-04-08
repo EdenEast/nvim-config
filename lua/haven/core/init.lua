@@ -52,3 +52,6 @@ require("haven.core.statusline").setup()
 require("haven.core.winbar").setup()
 require("haven.core.marks")
 -- vim.cmd.doautoall("User", "HavenLocalPost")
+
+-- Enable the new experimental command-line features.
+require("vim._core.ui2").enable({})

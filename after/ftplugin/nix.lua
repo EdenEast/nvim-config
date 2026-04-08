@@ -13,3 +13,13 @@ vim.keymap.set("n", "<localleader>b", "<cmd>make build<cr>", { desc = "Build" })
 vim.opt_local.commentstring = "# %s"
 
 require("haven.util").enable_lsp("nil_ls")
+
+vim.keymap.set("n", "<localleader>as", function()
+  package.loaded["haven.util.nix-split-join"] = nil
+  require("haven.util.nix-split-join").split()
+end, { buffer = true, desc = "Attrset split" })
+
+vim.keymap.set("n", "<localleader>aj", function()
+  package.loaded["haven.util.nix-split-join"] = nil
+  require("haven.util.nix-split-join").join()
+end, { buffer = true, desc = "Attrset join" })
