@@ -5,7 +5,7 @@ return {
   before = function() require("lz.n").trigger_load("markview.nvim") end,
   after = function()
     ---@diagnostic disable-next-line: missing-fields
-    require("nvim-treesitter.configs").setup({
+    require("nvim-treesitter").setup({
       highlight = { enable = true },
       indent = { enable = true },
       textobjects = {

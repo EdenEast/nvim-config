@@ -62,11 +62,11 @@
         "owner": "nvim-treesitter",
         "repo": "nvim-treesitter"
       },
-      "branch": "master",
+      "branch": "main",
       "submodules": false,
-      "revision": "cf12346a3414fa1b06af75c79faebe7f76df080a",
-      "url": "https://github.com/nvim-treesitter/nvim-treesitter/archive/cf12346a3414fa1b06af75c79faebe7f76df080a.tar.gz",
-      "hash": "sha256-dyYV/Qhugt3ceayKYtTXQAh86CBaDtRzgS2nEgYD8lg="
+      "revision": "4916d6592ede8c07973490d9322f187e07dfefac",
+      "url": "https://github.com/nvim-treesitter/nvim-treesitter/archive/4916d6592ede8c07973490d9322f187e07dfefac.tar.gz",
+      "hash": "sha256-PQR6tFt4lCrAZNQG7BLMD1IiCKja9wDS1S4laGJf/HE="
     },
     "nvim-treesitter-textobjects": {
       "type": "Git",
@@ -75,11 +75,11 @@
         "owner": "nvim-treesitter",
         "repo": "nvim-treesitter-textobjects"
       },
-      "branch": "master",
+      "branch": "main",
       "submodules": false,
-      "revision": "5ca4aaa6efdcc59be46b95a3e876300cfead05ef",
-      "url": "https://github.com/nvim-treesitter/nvim-treesitter-textobjects/archive/5ca4aaa6efdcc59be46b95a3e876300cfead05ef.tar.gz",
-      "hash": "sha256-lf+AwSu96iKO1vWWU2D7jWHGfjXkbX9R2CX3gMZaD4M="
+      "revision": "851e865342e5a4cb1ae23d31caf6e991e1c99f1e",
+      "url": "https://github.com/nvim-treesitter/nvim-treesitter-textobjects/archive/851e865342e5a4cb1ae23d31caf6e991e1c99f1e.tar.gz",
+      "hash": "sha256-fOpRElIwvsFWm4AwETx7fpC3RtdH2BpCfX4YHVitqw0="
     },
     "nvim-web-devicons": {
       "type": "Git",
