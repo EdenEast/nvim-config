@@ -29,6 +29,12 @@ return {
       },
     })
 
+    require("treesitter-context").setup({
+      max_lines = 3,
+      multiline_threshold = 1,
+      min_window_height = 20,
+    })
+
     vim.opt.foldmethod = "expr"
     vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
   end,
