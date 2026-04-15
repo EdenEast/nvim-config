@@ -1,0 +1,10 @@
+--- a/wrapper.nix
++++ b/wrapper.nix
+@@ -249,7 +249,7 @@
+           )
+           + "\""
+         )
+-        "--set"
++        "--set-default"
+         "NVIM_APPNAME"
+         appName

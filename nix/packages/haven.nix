@@ -140,14 +140,21 @@
           ruby.enable = false;
         };
       };
+    in let
+      mnwPatchedSrc = pkgs.applyPatches {
+        name = "mnv";
+        src = inputs.mnw;
+        patches = [./nvim-appname-set-default.patch];
+      };
+      mnwLib = let self = import "${mnwPatchedSrc}/outputs.nix" self; in self.lib;
     in {
       default = self'.packages.nightly;
 
-      nightly = inputs.mnw.lib.wrap {inherit pkgs;} (commonArgs
+      nightly = mnwLib.wrap {inherit pkgs;} (commonArgs
         // {
           inherit (inputs'.neovim-nightly-overlay.packages) neovim;
         });
-      stable = inputs.mnw.lib.wrap {inherit pkgs;} commonArgs;
+      stable = mnwLib.wrap {inherit pkgs;} commonArgs;
     };
   };
 }

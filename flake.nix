@@ -55,9 +55,8 @@
     };
     mnw = {
       type = "github";
-      owner = "EdenEast";
+      owner = "Gerg-L";
       repo = "mnw";
-      ref = "dev";
     };
     rust-overlay = {
       url = "github:oxalica/rust-overlay";
