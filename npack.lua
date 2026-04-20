@@ -6,8 +6,7 @@ vim.g.is_npack_load = true
 
 local is_headless = #vim.api.nvim_list_uis() == 0
 
-local is_ok, async = pcall(require, "vim._async")
-if not is_ok then async = loadfile(fs.joinpath(uv.cwd(), "async.lua"))() end
+local async = require("vim._async")
 
 local Terminal = {}
 
