@@ -140,7 +140,7 @@
           ruby.enable = false;
         };
       };
-    in let
+    
       mnwPatchedSrc = pkgs.applyPatches {
         name = "mnv";
         src = inputs.mnw;

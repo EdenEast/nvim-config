@@ -1,9 +1,8 @@
 vim.loader.enable()
 
--- I use the default neovim packpath as my development path for all my neovim plugins.
--- If the NVIM_APPNAME is not `nvim` then we need to prepend the packpath directory to ensure that these are the first
--- paths searched when looking for files
-if vim.env.NVIM_APPNAME ~= "nvim" then
+-- When running as nvim-haven, the standard nvim data paths are not in the packpath, so prepend the
+-- default nvim dev pack dir to pick up locally developed plugins from the standard location.
+if vim.env.NVIM_APPNAME and vim.env.NVIM_APPNAME ~= "nvim" then
   vim.opt.packpath:prepend(vim.fs.joinpath(os.getenv("HOME"), ".local", "share", "nvim", "site", "pack", "dev"))
 end
 
