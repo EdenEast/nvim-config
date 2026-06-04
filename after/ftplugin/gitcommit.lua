@@ -44,7 +44,6 @@ local function get_last_cache_entry()
     vim.cmd("split " .. latest)
   end
 end
-get_last_cache_entry()
 vim.keymap.set("n", "<localleader>l", function() get_last_cache_entry() end, { buffer = 0, desc = "Last Cache Entry" })
 
 -- Save git commit content to a cache temp file in case there was an issue writing the commit

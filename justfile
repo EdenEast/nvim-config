@@ -1,6 +1,9 @@
 set positional-arguments
 set windows-shell := ["powershell.exe", "-NoLogo", "-Command"]
 
+@default:
+  just --list
+
 [unix]
 profile op="snacks":
   NVIM_PROFILE={{op}} nvim
