@@ -1,6 +1,10 @@
 -- https://github.com/Praczet/little-taskwarrior.nvim
 -- https://github.com/folke/snacks.nvim/discussions/111#discussioncomment-11986334
 
+local has_git_graph = vim.fn.executable("git-graph") == 1
+local git_graph_command = [[echo -e "$(git-graph --style round --color always --wrap 80 0 8 -f 'oneline')"]]
+local git_log_command = [[git log --graph --oneline]]
+
 ---@type snacks.dashboard.Config
 ---@diagnostic disable-next-line: missing-fields
 return {
@@ -48,7 +52,7 @@ return {
       title = "Git Graph",
       section = "terminal",
       enabled = function() return Snacks.git.get_root() ~= nil end,
-      cmd = [[echo -e "$(git-graph --style round --color always --wrap 80 0 8 -f 'oneline')"]],
+      cmd = has_git_graph and git_graph_command or git_log_command,
       height = 10,
       padding = 1,
       ttl = 5 * 60,
