@@ -65,13 +65,11 @@
   };
 
   outputs = inputs:
-    inputs.flake-parts.lib.mkFlake {inherit inputs;} (
-      inputs.import-tree ./nix
-      // {
-        systems = import inputs.systems;
-        debug = true;
-      }
-    );
+    inputs.flake-parts.lib.mkFlake {inherit inputs;} {
+      imports = [(inputs.import-tree ./nix)];
+      systems = import inputs.systems;
+      debug = true;
+    };
 
   nixConfig = {
     accept-flake-config = true;

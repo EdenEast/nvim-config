@@ -14,6 +14,7 @@
 
       commonArgs = {
         appName = "nvim-haven";
+        appNameMethod = "set-default";
 
         extraBinPath = let
           formatters = with pkgs; [
@@ -141,12 +142,7 @@
         };
       };
 
-      mnwPatchedSrc = pkgs.applyPatches {
-        name = "mnv";
-        src = inputs.mnw;
-        patches = [./nvim-appname-set-default.patch];
-      };
-      mnwLib = let self = import "${mnwPatchedSrc}/outputs.nix" self; in self.lib;
+      mnwLib = inputs.mnw.lib;
     in {
       default = self'.packages.nightly;
 

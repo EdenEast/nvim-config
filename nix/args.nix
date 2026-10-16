@@ -8,12 +8,6 @@
       overlays = [
         inputs.gen-luarc.overlays.default
         inputs.rust-overlay.overlays.default
-        (_final: prev: {
-          git-graph = prev.git-graph.overrideAttrs (_old: {
-            buildInputs = [prev.pkgs.zlib];
-            meta.broken = false;
-          });
-        })
       ];
     };
   };
