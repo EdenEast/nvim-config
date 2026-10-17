@@ -12,6 +12,7 @@ opt.completeopt = "menu,menuone,noselect"
 opt.cursorline = true -- highlight current line
 opt.colorcolumn = { "+1" }
 opt.expandtab = true -- always use spaces instead of tabs
+opt.exrc = true -- load project-local config only after approval via Neovim's trust system
 opt.foldcolumn = "1" --
 opt.foldlevelstart = 99 -- start unfolded
 opt.foldenable = false
