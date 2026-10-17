@@ -78,17 +78,19 @@ opt.fillchars = {
   verthoriz = "╋", -- BOX DRAWINGS HEAVY VERTICAL AND HORIZONTAL (U+254B, UTF-8: E2 95 8B)
 }
 
-opt.formatoptions = opt.formatoptions -- :help fo-table
-  - "a" -- dont autoformat
-  - "t" -- dont autoformat my code, have linters for that
-  + "c" -- auto wrap comments using textwith
-  + "q" -- formmating of comments w/ `gq`
-  + "l" -- long lines are not broken up
-  + "j" -- remove comment leader when joning comments
-  + "r" -- continue comment with enter
-  - "o" -- but not w/ o and o, dont continue comments
-  + "n" -- smart auto indenting inside numbered lists
-  - "2" -- this is not grade school anymore
+-- :help fo-table
+-- NOTE: one flag per call. Chained infix ops (`opt.x - "a" + "c"`) error on nvim 0.13, and table
+-- arguments to append/remove on flaglist options behave differently between 0.12 and 0.13.
+opt.formatoptions:remove("a") -- dont autoformat
+opt.formatoptions:remove("t") -- dont autoformat my code, have linters for that
+opt.formatoptions:append("c") -- auto wrap comments using textwith
+opt.formatoptions:append("q") -- formmating of comments w/ `gq`
+opt.formatoptions:append("l") -- long lines are not broken up
+opt.formatoptions:append("j") -- remove comment leader when joning comments
+opt.formatoptions:append("r") -- continue comment with enter
+opt.formatoptions:remove("o") -- but not w/ o and o, dont continue comments
+opt.formatoptions:append("n") -- smart auto indenting inside numbered lists
+opt.formatoptions:remove("2") -- this is not grade school anymore
 
 -- TODO: Currently not supported
 -- opt.highlight = opt.highlight
@@ -96,12 +98,13 @@ opt.formatoptions = opt.formatoptions -- :help fo-table
 --   + 'N:DiffText' -- make current line number stand out a little
 --   + 'c:LineNr'   -- blend vertical separators with line numbers
 
-opt.listchars = opt.listchars
-  + "nbsp:⦸" -- CIRCLED REVERSE SOLIDUS (U+29B8, UTF-8: E2 A6 B8)
-  + "tab:▷┅" -- WHITE RIGHT-POINTING TRIANGLE (U+25B7, UTF-8: E2 96 B7)
-  + "extends:»" -- RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK (U+00BB, UTF-8: C2 BB)
-  + "precedes:«" -- LEFT-POINTING DOUBLE ANGLE QUOTATION MARK (U+00AB, UTF-8: C2 AB)
-  + "trail:•" -- BULLET (U+2022, UTF-8: E2 80 A2)
+opt.listchars:append({
+  nbsp = "⦸", -- CIRCLED REVERSE SOLIDUS (U+29B8, UTF-8: E2 A6 B8)
+  tab = "▷┅", -- WHITE RIGHT-POINTING TRIANGLE (U+25B7, UTF-8: E2 96 B7)
+  extends = "»", -- RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK (U+00BB, UTF-8: C2 BB)
+  precedes = "«", -- LEFT-POINTING DOUBLE ANGLE QUOTATION MARK (U+00AB, UTF-8: C2 AB)
+  trail = "•", -- BULLET (U+2022, UTF-8: E2 80 A2)
+})
 
 opt.shortmess:append({
   A = true, -- ignore annoying swapfile messages
