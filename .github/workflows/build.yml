@@ -6,6 +6,8 @@ on:
     paths:
       - "**.nix"
       - "flake.lock"
+      - "init.lua"
+      - "tests/**"
 jobs:
   build:
     strategy:
@@ -28,6 +30,9 @@ jobs:
 
     - name: Build nightly
       run: nix build --accept-flake-config --print-out-paths --show-trace .#nightly
+
+    - name: Check config selection
+      run: nix build --accept-flake-config --print-build-logs .#checks.x86_64-linux.config-selection-stable .#checks.x86_64-linux.config-selection-nightly
 
     - name: Build blink-cmp
       run: nix build --accept-flake-config --print-out-paths --show-trace .#blink-cmp

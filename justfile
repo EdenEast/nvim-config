@@ -9,19 +9,19 @@ profile op="snacks":
   NVIM_PROFILE={{op}} nvim
 
 [unix]
-install appname="nvim-haven":
+install appname="nvim":
   @NVIM_APPNAME="{{appname}}" nvim --clean --headless -u ./npack.lua +PackInstall
 
 [unix]
-clean appname="nvim-haven":
+clean appname="nvim":
   @NVIM_APPNAME="{{appname}}" nvim --clean --headless -u ./npack.lua +PackClean
 
 [unix]
-uninstall appname="nvim-haven":
+uninstall appname="nvim":
   @NVIM_APPNAME="{{appname}}" nvim --clean --headless -u ./npack.lua +PackUninstall
 
 [unix]
-status appname="nvim-haven":
+status appname="nvim":
   @NVIM_APPNAME="{{appname}}" nvim --clean --headless -u ./npack.lua +PackStatus
 
 [unix]
@@ -42,17 +42,17 @@ profile op="snacks":
   @$env:NVIM_PROFILE = "{{op}}" ; nvim --clean --headless -u ./npack.lua +PackInstall
 
 [windows]
-install appname="nvim-haven":
+install appname="nvim":
   @$env:NVIM_APPNAME = "{{appname}}" ; nvim --clean --headless -u ./npack.lua +PackInstall
 
 [windows]
-clean appname="nvim-haven":
+clean appname="nvim":
   @$env:NVIM_APPNAME = "{{appname}}" ; nvim --clean --headless -u ./npack.lua +PackClean
 
 [windows]
-uninstall appname="nvim-haven":
+uninstall appname="nvim":
   @$env:NVIM_APPNAME = "{{appname}}" ; nvim --clean --headless -u ./npack.lua +PackUninstall
 
 [windows]
-status appname="nvim-haven":
+status appname="nvim":
   @$env:NVIM_APPNAME = "{{appname}}" ; nvim --clean --headless -u ./npack.lua +PackStatus

@@ -12,9 +12,39 @@
     packages = let
       npinsToPlugins = input: builtins.mapAttrs (_: v: v {inherit pkgs;}) (import ../_npins.nix {inherit input;});
 
+      # Chooses the config before neovim starts. mnw's `--cmd` and `VIMINIT` inject the bundled config unconditionally,
+      # so deciding inside lua is too late to give a user config a clean slate. This runs first in the wrapper script:
+      #   - `$XDG_CONFIG_HOME/${NVIM_APPNAME:-nvim}` has an init file, or `--clean`/`-u` is passed: exec stock neovim.
+      #   - Otherwise: run the bundled haven config with `NVIM_APPNAME` defaulting to `nvim-haven`.
+      # Run `tests/config-selection.sh` (or `nix flake check`) after changing this.
+      selectConfig = neovim: ''
+        config_dir="''${XDG_CONFIG_HOME:-$HOME/.config}/''${NVIM_APPNAME:-nvim}"
+        use_stock=
+        if [ -e "$config_dir/init.lua" ] || [ -e "$config_dir/init.vim" ]; then use_stock=1; fi
+        for arg in "$@"; do
+          case "$arg" in
+            --) break ;;
+            --clean | -u) use_stock=1 ;;
+          esac
+        done
+        if [ -n "$use_stock" ]; then
+          unset VIMINIT
+          export PATH="$PATH:${lib.makeBinPath commonArgs.extraBinPath}"
+          exec -a "$0" ${lib.getExe neovim} "$@"
+        fi
+        export NVIM_APPNAME="''${NVIM_APPNAME:-nvim-haven}"
+      '';
+
+      wrap = neovim:
+        mnwLib.wrap {inherit pkgs;} (commonArgs
+          // {
+            inherit neovim;
+            wrapperArgs = ["--run" (selectConfig neovim)];
+          });
+
       commonArgs = {
-        appName = "nvim-haven";
-        appNameMethod = "set-default";
+        # Set by `selectConfig` instead, which needs to know whether the user set it.
+        appName = null;
 
         extraBinPath = let
           formatters = with pkgs; [
@@ -62,7 +92,12 @@
         # ++ (pluginDependencies |> builtins.attrValues |> lib.flatten)
         # |> lib.unique;
 
-        initLua = builtins.readFile ../../init.lua;
+        # mnw loads this through `$VIMINIT`. Clear it so a nested stock nvim (e.g. in `:terminal`) does not inherit it.
+        initLua =
+          ''
+            vim.env.VIMINIT = nil
+          ''
+          + builtins.readFile ../../init.lua;
 
         plugins = {
           dev.config = {
@@ -146,11 +181,8 @@
     in {
       default = self'.packages.nightly;
 
-      nightly = mnwLib.wrap {inherit pkgs;} (commonArgs
-        // {
-          inherit (inputs'.neovim-nightly-overlay.packages) neovim;
-        });
-      stable = mnwLib.wrap {inherit pkgs;} commonArgs;
+      nightly = wrap inputs'.neovim-nightly-overlay.packages.neovim;
+      stable = wrap pkgs.neovim-unwrapped;
     };
   };
 }

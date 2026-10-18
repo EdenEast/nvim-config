@@ -6,7 +6,7 @@ vim.g.is_npack_load = true
 
 local is_headless = #vim.api.nvim_list_uis() == 0
 
-local async = require("vim._async")
+local async = require("vim.async")
 
 local Terminal = {}
 
