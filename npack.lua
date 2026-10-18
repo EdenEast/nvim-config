@@ -6,7 +6,7 @@ vim.g.is_npack_load = true
 
 local is_headless = #vim.api.nvim_list_uis() == 0
 
-local async = require("vim.async")
+local async = vim.async
 
 local Terminal = {}
 
@@ -131,9 +131,11 @@ local function normalize(spec, result)
   return result
 end
 
+--- @async
 local function exec_build_string(command, name, path)
   write(Terminal.prefix(name, fmt("Execute build command: %s", Terminal.yellow(command))))
-  local out = vim.system(vim.split(command, " "), { cwd = path, text = true }):wait()
+  local out = async.await(3, vim.system, vim.split(command, " "), { cwd = path, text = true })
+  async.await(vim.schedule)
   if out.code ~= 0 then write(Terminal.prefix(name, fmt("Failed to build: '%s'", Terminal.red(out.stderr)))) end
 end
 
@@ -148,7 +150,7 @@ local function git_cmd(cmd, cwd)
   cmd = vim.list_extend({ "git", "-c", "gc.auto=0" }, cmd)
   local sys_opts = { cwd = cwd, text = true, clear_env = true }
   local out = async.await(3, vim.system, cmd, sys_opts) --- @type vim.SystemCompleted
-  async.await(1, vim.schedule)
+  async.await(vim.schedule)
   if out.code ~= 0 then error(out.stderr) end
   local stdout, stderr = assert(out.stdout), assert(out.stderr)
   if stderr ~= "" then vim.schedule(function() vim.notify(stderr:gsub("\n+$", ""), vim.log.levels.WARN) end) end
@@ -271,7 +273,13 @@ local function install(args)
     return acc
   end)
 
-  async.run(function() async.join(n_threads, funs) end):wait()
+  async.run(function()
+    local limit = async.semaphore(n_threads)
+    for _, fun in ipairs(funs) do
+      async.run(function() limit:with(fun) end)
+    end
+    -- The parent task waits for all attached install tasks before completing.
+  end):wait()
 end
 
 local function clean(args)
