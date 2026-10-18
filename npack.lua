@@ -6,7 +6,44 @@ vim.g.is_npack_load = true
 
 local is_headless = #vim.api.nvim_list_uis() == 0
 
-local async = vim.async
+-- Neovim's async module differs between releases (`vim._async` on stable, `vim.async` on nightly), so npack drives its
+-- own coroutines with the two helpers below.
+
+--- Run a command and suspend the current coroutine until it exits. Resumes on the main loop, so callers may use any API.
+--- @async
+--- @param cmd string[]
+--- @param opts vim.SystemOpts
+--- @return vim.SystemCompleted
+local function system(cmd, opts)
+  local co = assert(coroutine.running(), "system() must be called from a coroutine")
+  vim.system(cmd, opts, function(out)
+    vim.schedule(function() assert(coroutine.resume(co, out)) end)
+  end)
+  return coroutine.yield()
+end
+
+--- Run each function in its own coroutine, at most `limit` at a time, and block until all have returned. The functions
+--- must not error: an error would leave the wait running until its timeout.
+--- @param funs (async fun())[]
+--- @param limit integer
+local function run_parallel(funs, limit)
+  local next_idx, done = 1, 0
+  local function start_next()
+    if next_idx > #funs then return end
+    local fun = funs[next_idx]
+    next_idx = next_idx + 1
+    assert(coroutine.resume(coroutine.create(function()
+      fun()
+      done = done + 1
+      vim.schedule(start_next)
+    end)))
+  end
+  for _ = 1, math.min(limit, #funs) do
+    start_next()
+  end
+  -- One hour is far longer than any install or build should take.
+  vim.wait(60 * 60 * 1000, function() return done == #funs end)
+end
 
 local Terminal = {}
 
@@ -134,8 +171,7 @@ end
 --- @async
 local function exec_build_string(command, name, path)
   write(Terminal.prefix(name, fmt("Execute build command: %s", Terminal.yellow(command))))
-  local out = async.await(3, vim.system, vim.split(command, " "), { cwd = path, text = true })
-  async.await(vim.schedule)
+  local out = system(vim.split(command, " "), { cwd = path, text = true })
   if out.code ~= 0 then error(fmt("Failed to build: '%s'", out.stderr), 0) end
 end
 
@@ -149,8 +185,7 @@ local function git_cmd(cmd, cwd)
   -- Use '-c gc.auto=0' to disable `stderr` "Auto packing..." messages
   cmd = vim.list_extend({ "git", "-c", "gc.auto=0" }, cmd)
   local sys_opts = { cwd = cwd, text = true, clear_env = true }
-  local out = async.await(3, vim.system, cmd, sys_opts) --- @type vim.SystemCompleted
-  async.await(vim.schedule)
+  local out = system(cmd, sys_opts)
   if out.code ~= 0 then error(out.stderr) end
   local stdout, stderr = assert(out.stdout), assert(out.stderr)
   if stderr ~= "" then vim.schedule(function() vim.notify(stderr:gsub("\n+$", ""), vim.log.levels.WARN) end) end
@@ -272,8 +307,8 @@ local function install(args)
     build_handle(name, path, pin.revision)
   end
 
-  -- An error escaping a child task cancels every sibling, including builds still running. Report each plugin's failure
-  -- on its own so the rest of the install finishes.
+  -- Report each plugin's failure on its own so the rest of the install finishes. `run_parallel` also requires that its
+  -- functions never error.
   local function guarded(name, pin, is_opt)
     local ok, err = copcall(inner, name, pin, is_opt)
     if not ok then write(Terminal.prefix(name, Terminal.red(tostring(err)))) end
@@ -289,14 +324,7 @@ local function install(args)
     return acc
   end)
 
-  async.run(function()
-    local limit = async.semaphore(n_threads)
-    for _, fun in ipairs(funs) do
-      async.run(function() limit:with(fun) end)
-    end
-    -- The parent task waits for all attached install tasks before completing. `guarded` keeps one failure from
-    -- cancelling the others.
-  end):wait()
+  run_parallel(funs, n_threads)
 end
 
 local function clean(args)
