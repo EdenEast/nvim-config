@@ -136,7 +136,7 @@ local function exec_build_string(command, name, path)
   write(Terminal.prefix(name, fmt("Execute build command: %s", Terminal.yellow(command))))
   local out = async.await(3, vim.system, vim.split(command, " "), { cwd = path, text = true })
   async.await(vim.schedule)
-  if out.code ~= 0 then write(Terminal.prefix(name, fmt("Failed to build: '%s'", Terminal.red(out.stderr)))) end
+  if out.code ~= 0 then error(fmt("Failed to build: '%s'", out.stderr), 0) end
 end
 
 -- Git ------------------------------------------------------------------------
@@ -216,21 +216,29 @@ end
 local function install(args)
   args = args or {}
 
-  local function build_handle(name, path)
-    if plugins[name] then
-      local plug = plugins[name]
-      if plug.build then
-        local build = plug.build
-        local ty = type(build)
-        if ty == "function" then
-          build()
-        elseif ty == "table" then
-          vim.iter(build):each(function(x) exec_build_string(x, name, path) end)
-        else
-          exec_build_string(build, name, path)
-        end
-      end
+  -- A successful build records the revision it built in this file, so a failed or interrupted build is retried on the
+  -- next install instead of being skipped as "up to date".
+  local function build_stamp_path(path) return joinpath(path, ".git", "npack-build") end
+
+  local function needs_build(name, path, rev)
+    local plug = plugins[name]
+    if not (plug and plug.build) then return false end
+    local ok, lines = pcall(vim.fn.readfile, build_stamp_path(path))
+    return not (ok and lines[1] == rev)
+  end
+
+  local function build_handle(name, path, rev)
+    if not needs_build(name, path, rev) then return end
+    local build = plugins[name].build
+    local ty = type(build)
+    if ty == "function" then
+      build()
+    elseif ty == "table" then
+      vim.iter(build):each(function(x) exec_build_string(x, name, path) end)
+    else
+      exec_build_string(build, name, path)
     end
+    vim.fn.writefile({ rev }, build_stamp_path(path))
   end
 
   local function inner(name, pin, is_opt)
@@ -246,13 +254,14 @@ local function install(args)
       local current_rev = git_cmd({ "rev-list", "-1", "HEAD" }, path)
       if current_rev == pin.revision then
         write(Terminal.prefix(name, Terminal.green("up to date")))
+        build_handle(name, path, pin.revision)
         return
       end
 
       git_cmd({ "fetch", "--quiet", "--tags", "--force", "--recurse-submodules=yes", "origin" }, path)
       git_checkout(pin.revision, path)
       write(Terminal.prefix(name, fmt("%s -> %s", Terminal.red(current_rev), Terminal.magenta(pin.revision))))
-      build_handle(name, path)
+      build_handle(name, path, pin.revision)
       return
     end
 
@@ -260,16 +269,23 @@ local function install(args)
     git_clone(url, path)
     git_checkout(pin.revision, path)
     write(Terminal.prefix(name, fmt("Installed at rev %s", Terminal.magenta(pin.revision))))
-    build_handle(name, path)
+    build_handle(name, path, pin.revision)
+  end
+
+  -- An error escaping a child task cancels every sibling, including builds still running. Report each plugin's failure
+  -- on its own so the rest of the install finishes.
+  local function guarded(name, pin, is_opt)
+    local ok, err = copcall(inner, name, pin, is_opt)
+    if not ok then write(Terminal.prefix(name, Terminal.red(tostring(err)))) end
   end
 
   local funs = {}
   vim.iter(start_pins):fold(funs, function(acc, name, pin)
-    acc[#acc + 1] = function() inner(name, pin, false) end
+    acc[#acc + 1] = function() guarded(name, pin, false) end
     return acc
   end)
   vim.iter(opt_pins):fold(funs, function(acc, name, pin)
-    acc[#acc + 1] = function() inner(name, pin, true) end
+    acc[#acc + 1] = function() guarded(name, pin, true) end
     return acc
   end)
 
@@ -278,7 +294,8 @@ local function install(args)
     for _, fun in ipairs(funs) do
       async.run(function() limit:with(fun) end)
     end
-    -- The parent task waits for all attached install tasks before completing.
+    -- The parent task waits for all attached install tasks before completing. `guarded` keeps one failure from
+    -- cancelling the others.
   end):wait()
 end
 
